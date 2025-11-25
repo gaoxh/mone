@@ -30,12 +30,31 @@
             <artifactId>hive</artifactId>
             <version>1.6.2-jdk21-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>run.mone</groupId>
+            <artifactId>hive-spring-starter</artifactId>
+            <version>1.6.0-jdk21-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 
     <build>
 
         <plugins>
+<!--            <plugin>-->
+<!--                <artifactId>maven-compiler-plugin</artifactId>-->
+<!--                <version>3.11.0</version>-->
+<!--                <configuration>-->
+<!--                    <source>${maven.compiler.source}</source>-->
+<!--                    <target>${maven.compiler.target}</target>-->
+<!--                    <verbose>true</verbose>-->
+<!--                    <encoding>UTF-8</encoding>-->
+<!--                    <compilerArguments>-->
+<!--                        <sourcepath>${project.basedir}/src/main/java</sourcepath>-->
+<!--                    </compilerArguments>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
 
             <plugin>
                 <groupId>org.springframework.boot</groupId>

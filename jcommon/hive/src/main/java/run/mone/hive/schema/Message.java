@@ -39,6 +39,17 @@ public class Message implements Serializable {
 
     private String clientId;
 
+    private String voiceBase64;
+
+    private String userId;
+
+    private String agentId;
+
+    private boolean error;
+
+    //标识是否需要清空聊天记录
+    private boolean clearHistory;
+
     public Message(String content) {
         this(content, "user", null, null);
     }

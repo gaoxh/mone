@@ -27,4 +27,12 @@ public class JsonUtils {
             throw new RuntimeException("Failed to read JSON file", e);
         }
     }
+
+    public static String toolResult(String res) {
+        return "<tool_result>" + res + "</tool_result>";
+    }
+
+    public static String fileDiffResult(String res) {
+        return "<file_diff>" + res + "</file_diff>";
+    }
 } 

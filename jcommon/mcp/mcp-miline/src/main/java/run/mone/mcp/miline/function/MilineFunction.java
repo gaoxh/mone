@@ -1,21 +1,22 @@
 package run.mone.mcp.miline.function;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
+import run.mone.hive.mcp.function.McpFunction;
 import run.mone.hive.mcp.spec.McpSchema;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.concurrent.TimeUnit;
 import java.io.IOException;
 import java.util.ArrayList;
 
 @Data
 @Slf4j
-public class MilineFunction implements Function<Map<String, Object>, Flux<McpSchema.CallToolResult>> {
+public class MilineFunction implements McpFunction {
 
     private String name = "stream_miline_executor";
     private String desc = "Miline CICD platform operations including managing project members and running pipelines";
@@ -46,13 +47,18 @@ public class MilineFunction implements Function<Map<String, Object>, Flux<McpSch
             }
             """;
 
-    private static final String BASE_URL = "http://XX/mtop/miline";
+    private static final String BASE_URL = System.getenv("req_base_url")+"/mtop/miline";
     private static final String GET_MEMBERS_URL = BASE_URL + "/getProjectMembers";
     private static final String MODIFY_MEMBERS_URL = BASE_URL + "/modifyMember";
     private static final String RUN_PIPELINE_URL = BASE_URL + "/startPipelineWithLatestCommit";
     
     private final OkHttpClient client;
     private final ObjectMapper objectMapper;
+
+    @Override
+    public String getToolScheme() {
+        return toolSchema;
+    }
 
     @Data
     private static class ProjectMember {
@@ -88,10 +94,12 @@ public class MilineFunction implements Function<Map<String, Object>, Flux<McpSch
     }
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private static class ApiResponse<T> {
         private int code;
         private T data;
         private String message;
+        private String detailMsg;
     }
 
     private List<ProjectMember> getProjectMembers(Integer projectId) throws Exception {

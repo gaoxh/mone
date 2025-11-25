@@ -18,10 +18,8 @@ package com.xiaomi.youpin.docean.plugin.dubbo;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.dubbo.common.Constants;
-import org.apache.dubbo.config.ApplicationConfig;
-import org.apache.dubbo.config.ReferenceConfig;
-import org.apache.dubbo.config.RegistryConfig;
+import org.apache.dubbo.common.constants.CommonConstants;
+import org.apache.dubbo.config.*;
 import org.apache.dubbo.config.utils.ReferenceConfigCache;
 import org.apache.dubbo.rpc.RpcContext;
 import org.apache.dubbo.rpc.service.GenericService;
@@ -37,7 +35,11 @@ public class DubboCall {
 
     private RegistryConfig registryConfig;
 
-    public DubboCall(ApplicationConfig applicationConfig, RegistryConfig registryConfig) {
+    private MetadataReportConfig metadataReportConfig;
+
+    private ConfigCenterConfig configCenterConfig;
+
+    public DubboCall(ApplicationConfig applicationConfig, RegistryConfig registryConfig, MetadataReportConfig metadataReportConfig, ConfigCenterConfig configCenterConfig) {
         this.applicationConfig = applicationConfig;
         this.registryConfig = registryConfig;
     }
@@ -49,7 +51,7 @@ public class DubboCall {
      */
     public Object call(DubboRequest request) {
 
-        RpcContext.getContext().setAttachment(Constants.TIMEOUT_KEY, String.valueOf(request.getTimeout()));
+        RpcContext.getContext().setAttachment(CommonConstants.TIMEOUT_KEY, String.valueOf(request.getTimeout()));
         String key = ReferenceConfigCache.getKey(request.getServiceName(), request.getGroup(), request.getVersion());
         GenericService genericService = ReferenceConfigCache.getCache().get(key);
         boolean create = false;
@@ -57,6 +59,8 @@ public class DubboCall {
             ReferenceConfig<GenericService> reference = new ReferenceConfig<>();
             reference.setApplication(applicationConfig);
             reference.setRegistry(registryConfig);
+            reference.setMetadataReportConfig(metadataReportConfig);
+            reference.setConfigCenter(configCenterConfig);
             reference.setInterface(request.getServiceName());
             reference.setGeneric(true);
             reference.setCheck(false);
